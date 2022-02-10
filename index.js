@@ -28,38 +28,28 @@ const pollApi = async function () {
 
 const parseBlocksArray = async function (array) {
     for (let i = 0; i < array.length; i++) {
-        await fetch(`https://api.zksync.io/api/v0.2/blocks/${array[i]}/transactions?from=latest&limit=100&direction=older`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-            })
+        await parseBlock(array[i], 'latest', 0)
+            // .then(res => res.json())
+            
     }
 }
 
 const parseBlock = async function (block, tx, index) {
+    let blockTxArray = []
     console.log('calling parseBlock with block: ', block, ' tx: ', tx)
-    // console.log('hitting getTransactions: ', nonce, address)
     await fetch(`https://api.zksync.io/api/v0.2/blocks/${block}/transactions?from=${tx}&limit=100&direction=older`)
         .then((res) => res.json())
         .then(data => {
             for (let i = index; i < data.result.list.length; i++) {
                 if (data.result.list[i].op.type == "Swap") {
-                console.log(data.result.list[i].op.type)
-
+                blockTxArray.push(data.result.list[i])
                 }
             }
-
-
-            // for (let i = index; i < data.result.list.length; i++) {
-            //     // console.log(data.result.list[i])
-            //     // txArray.push(data.result.list[i])
-            //     txArray.push(data.result.list[i])
-            // }
 
             if (data.result.list.length > 99) {
                 parseBlock(block, data.result.list[99].txHash, 1)
             } else {
-                // getTotalVol(txArray)
+                console.log(blockTxArray.length)
             }
         })
 }
@@ -130,5 +120,5 @@ const pingWebhook = async function (payload) {
 
 // pollApi()
 
-parseBlock(mostRecentBlock, 'latest', 0)
+parseBlocksArray([mostRecentBlock, mostRecentBlock+1])
 
