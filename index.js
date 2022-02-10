@@ -6,6 +6,7 @@ const webhook = 'https://discord.com/api/webhooks/941403789611651102/2Wkw4JpmXmx
 let mostRecentBlock = 54427
 
 const pollApi = async function () {
+    let blocksToParse = []
     await fetch(`https://api.zksync.io/api/v0.2/blocks?from=${mostRecentBlock}&limit=100&direction=newer`)
         .then(res => res.json())
         .then(data => {
@@ -13,12 +14,22 @@ const pollApi = async function () {
                 // console.log(data)
                 let numNewBlocks = data.result.list.length;
                 if (numNewBlocks > 1) {
-                    console.log('new blocks')
-                }
-                
+                    for (let i = 1; i < numNewBlocks; i++) {
+                        blocksToParse.push(data.result.list[i].blockNumber)
+                    }
+                    parseBlocks(blocksToParse)
+                } else {
+                    console.log(`no new blocks found, most recent remains ${mostRecentBlock}`)
+                }                
                 //     // parseData(data.result)
             }
         })
+}
+
+const parseBlocks = async function (array) {
+    for (let i = 0; i < array.length; i++) {
+        console.log(array[i])
+    }
 }
 
 const parseData = async function (data) {
