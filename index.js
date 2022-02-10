@@ -11,8 +11,10 @@ const pollApi = async function () {
         .then(data => {
             if (data.status == "success") {
                 // console.log(data)
-                console.log(data.result.list.length)
-
+                let numNewBlocks = data.result.list.length;
+                if (numNewBlocks > 1) {
+                    console.log('new blocks')
+                }
                 
                 //     // parseData(data.result)
             }
