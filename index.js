@@ -3,13 +3,18 @@ import fetch from 'node-fetch';
 
 const webhook = 'https://discord.com/api/webhooks/941403789611651102/2Wkw4JpmXmxFNWbCBdQfpknSf5-el11yj4Khglthj2RvG8ecDU-r53yIjUHsvjCzq5_9'
 
+let mostRecentBlock = 54427
 
 const pollApi = async function () {
-    await fetch(`https://api.zksync.io/api/v0.2/blocks/lastCommitted`)
+    await fetch(`https://api.zksync.io/api/v0.2/blocks?from=${mostRecentBlock}&limit=100&direction=newer`)
         .then(res => res.json())
         .then(data => {
             if (data.status == "success") {
-                parseData(data.result)
+                // console.log(data)
+                console.log(data.result.list.length)
+
+                
+                //     // parseData(data.result)
             }
         })
 }
@@ -18,7 +23,7 @@ const parseData = async function (data) {
     let blockNumber = data.blockNumber
     let payload = {
         "username": "ZZ Whale Watcher",
-        "content": "An Update",
+        "content": "",
         "embeds": [
             {
                 "author": {
@@ -26,7 +31,7 @@ const parseData = async function (data) {
                     "url": "https://trade.zigzag.exchange/"
                 },
                 "title": `New Block ${blockNumber}`,
-                "url": "https://trade.zigzag.exchange/",
+                "url": `https://api.zksync.io/api/v0.2/blocks/${blockNumber}`,
                 "description": "**New** __block__ `mined`[hyperlink](https://trade.zigzag.exchange/)",
                 "color": 15258703,
                 "fields": [
