@@ -17,19 +17,51 @@ const pollApi = async function () {
                     for (let i = 1; i < numNewBlocks; i++) {
                         blocksToParse.push(data.result.list[i].blockNumber)
                     }
-                    parseBlocks(blocksToParse)
+                    parseBlocksArray(blocksToParse)
                 } else {
                     console.log(`no new blocks found, most recent remains ${mostRecentBlock}`)
-                }                
+                }
                 //     // parseData(data.result)
             }
         })
 }
 
-const parseBlocks = async function (array) {
+const parseBlocksArray = async function (array) {
     for (let i = 0; i < array.length; i++) {
-        console.log(array[i])
+        await fetch(`https://api.zksync.io/api/v0.2/blocks/${array[i]}/transactions?from=latest&limit=100&direction=older`)
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+            })
     }
+}
+
+const parseBlock = async function (block, tx, index) {
+    console.log('calling parseBlock with block: ', block, ' tx: ', tx)
+    // console.log('hitting getTransactions: ', nonce, address)
+    await fetch(`https://api.zksync.io/api/v0.2/blocks/${block}/transactions?from=${tx}&limit=100&direction=older`)
+        .then((res) => res.json())
+        .then(data => {
+            for (let i = index; i < data.result.list.length; i++) {
+                if (data.result.list[i].op.type == "Swap") {
+                console.log(data.result.list[i].op.type)
+
+                }
+            }
+
+
+            // for (let i = index; i < data.result.list.length; i++) {
+            //     // console.log(data.result.list[i])
+            //     // txArray.push(data.result.list[i])
+            //     txArray.push(data.result.list[i])
+            // }
+
+            if (data.result.list.length > 99) {
+                parseBlock(block, data.result.list[99].txHash, 1)
+            } else {
+                // getTotalVol(txArray)
+            }
+        })
 }
 
 const parseData = async function (data) {
@@ -96,5 +128,7 @@ const pingWebhook = async function (payload) {
         })
 }
 
-pollApi()
+// pollApi()
+
+parseBlock(mostRecentBlock, 'latest', 0)
 
