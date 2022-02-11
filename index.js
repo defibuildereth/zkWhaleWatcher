@@ -6,7 +6,7 @@ const webhook = process.env.WEBHOOK
 
 // console.log(webhook)
 
-let mostRecentBlock = 54427
+let mostRecentBlock = 54438
 
 const pollApi = async function () {
     let blocksToParse = []
@@ -155,10 +155,3 @@ const pingWebhook = async function (payload) {
 }
 
 pollApi()
-
-// getTotalBlockVolume(mostRecentBlock)
-
-// parseData(mostRecentBlock)
-
-// parseBlocksArray([mostRecentBlock+3])
-
