@@ -1,7 +1,10 @@
 import axios from 'axios';
 import fetch from 'node-fetch';
+import 'dotenv/config'
 
-const webhook = 'https://discord.com/api/webhooks/941403789611651102/2Wkw4JpmXmxFNWbCBdQfpknSf5-el11yj4Khglthj2RvG8ecDU-r53yIjUHsvjCzq5_9'
+const webhook = process.env.WEBHOOK
+
+// console.log(webhook)
 
 let mostRecentBlock = 54427
 
@@ -14,6 +17,7 @@ const pollApi = async function () {
                 // console.log(data)
                 let numNewBlocks = data.result.list.length;
                 if (numNewBlocks > 1) {
+                    console.log('there are ', numNewBlocks-1, ' new blocks to parse')
                     for (let i = 1; i < numNewBlocks; i++) {
                         blocksToParse.push(data.result.list[i].blockNumber)
                     }
@@ -49,7 +53,7 @@ const parseBlock = async function (block, tx, index) {
             if (data.result.list.length > 99) {
                 parseBlock(block, data.result.list[99].txHash, 1)
             } else {
-                console.log(blockTxArray.length)
+                console.log('swap txs in this block: ', blockTxArray.length)
             }
         })
 }
@@ -120,5 +124,7 @@ const pingWebhook = async function (payload) {
 
 // pollApi()
 
-parseBlocksArray([mostRecentBlock, mostRecentBlock+1])
+// parseData(mostRecentBlock)
+
+// parseBlocksArray([mostRecentBlock, mostRecentBlock+1])
 
