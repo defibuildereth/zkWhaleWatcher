@@ -6,7 +6,7 @@ const webhook = process.env.WEBHOOK
 
 // console.log(webhook)
 
-let mostRecentBlock = 54438
+let mostRecentBlock = 54444
 
 const pollApi = async function () {
     let blocksToParse = []
@@ -120,20 +120,20 @@ const parseData = async function (block, totalBlockVolume, numTxs) {
                 "color": 15258703,
                 "fields": [
                     {
-                        "name": "**Swaps**",
+                        "name": "**Trades**",
                         "value": `${numTxs}`,
-                        "inline": true
+                        "inline": true 
                     },
                     {
                         "name": "**Total Volume**",
-                        "value": `${totalBlockVolume.toFixed(2)}`,
+                        "value": `${totalBlockVolume.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`,
                         "inline": true
                     }
                     
                 ],
                 "footer": {
-                    "text": "Made by DefiBuilder.eth, powered by ZkSync API",
-                    "icon_url": "https://i.imgur.com/fKL31aD.jpg"
+                    "text": "Made by @DefiBuilderETH, powered by ZkSync API",
+                    "icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1200px-Twitter-logo.svg.png"
                 }
             }
         ]
